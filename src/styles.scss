@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+//how to import bootstrap after npm install bootstrap ?
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+.max-width-fit-content {
+    max-width: fit-content;
+}
+
+[aria-expanded="true"] .bi-chevron-down {
+  transform: rotate(180deg);
+  transition: transform 0.25s ease-in-out;
+}
+  
+.bi-chevron-down {
+  transition: transform 0.25s ease-in-out;
+}
