@@ -12,7 +12,7 @@
        </div>
       <input type="date"
       class="form-control w-auto align-self-center">
-      <button class="btn btn btn-outline-info">
+      <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#foodBankModal">
         Food Bank
       </button>
 
@@ -192,6 +192,102 @@
           </div>
         </div>
       </div>    
+    </div>
+  </div>
+</div>
+
+<!-- Food Bank Modal -->
+<div class="modal fade" id="foodBankModal" tabindex="-1" aria-labelledby="foodBankModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="foodBankModalLabel">Food Bank</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Search and Add Section -->
+        <div class="d-flex justify-content-between mb-3">
+          <div class="input-group w-75">
+            <span class="input-group-text bg-dark text-light border-secondary">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Search foods...">
+          </div>
+          <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#addFoodCollapse">
+            <i class="bi bi-plus-lg"></i> Add Food
+          </button>
+        </div>
+
+        <!-- Add Food Collapse Section -->
+        <div class="collapse mb-3" id="addFoodCollapse">
+          <div class="card bg-dark border-secondary">
+            <div class="card-body">
+              <form>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Food Name</label>
+                    <input type="text" class="form-control bg-dark text-light border-secondary" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Calories</label>
+                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label">Protein (g)</label>
+                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label">Carbs (g)</label>
+                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label">Fat (g)</label>
+                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#addFoodCollapse">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Save Food</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Food List -->
+        <div class="list-group">
+          <div class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">Banana</h6>
+              <small>100 kcal | P: 1g | C: 25g | F: 0g</small>
+            </div>
+            <div>
+              <button class="btn btn-sm btn-outline-info me-2">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">Burger</h6>
+              <small>500 kcal | P: 25g | C: 40g | F: 30g</small>
+            </div>
+            <div>
+              <button class="btn btn-sm btn-outline-info me-2">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
