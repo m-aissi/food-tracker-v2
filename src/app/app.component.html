@@ -217,10 +217,9 @@
             <i class="bi bi-plus-lg"></i> Add Food
           </button>
         </div>
-
         <!-- Add Food Collapse Section -->
         <div class="collapse mb-3" id="addFoodCollapse">
-          <div class="card bg-dark border-secondary">
+          <div class="card bg-body-tertiary border-secondary-subtle">
             <div class="card-body">
               <form>
                 <div class="row">
@@ -247,7 +246,7 @@
                     <input type="number" class="form-control bg-dark text-light border-secondary" required>
                   </div>
                 </div>
-                <div class="text-end">
+                <div class="text-end -dark">
                   <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#addFoodCollapse">Cancel</button>
                   <button type="submit" class="btn btn-primary">Save Food</button>
                 </div>
@@ -258,32 +257,49 @@
 
         <!-- Food List -->
         <div class="list-group">
-          <div class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
-            <div>
-              <h6 class="mb-0">Banana</h6>
-              <small>100 kcal | P: 1g | C: 25g | F: 0g</small>
+          <div *ngFor="let food of foods" class="mb-2">
+            <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light-subtle" 
+                 role="button" 
+                 data-bs-toggle="collapse" 
+                 [attr.data-bs-target]="'#foodCollapse' + food.id" 
+                 aria-expanded="false" 
+                 [attr.aria-controls]="'foodCollapse' + food.id">
+              <div class="d-flex align-items-center">
+                <span class="fw-bold">{{food.name}}</span>
+                <span class="badge text-bg-primary mx-2">{{food.calories}} kcal</span>
+              </div>
+              <i class="bi bi-chevron-down"></i>
             </div>
-            <div>
-              <button class="btn btn-sm btn-outline-info me-2">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
-          </div>
-          <div class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
-            <div>
-              <h6 class="mb-0">Burger</h6>
-              <small>500 kcal | P: 25g | C: 40g | F: 30g</small>
-            </div>
-            <div>
-              <button class="btn btn-sm btn-outline-info me-2">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger">
-                <i class="bi bi-trash"></i>
-              </button>
+            <div class="collapse" [id]="'foodCollapse' + food.id">
+              <div class="card card-body bg-dark text-light">
+                <div class="d-flex justify-content-start align-items-center">
+                  <div class="ms-2" style="width: 100px; height: 100px; position: relative;">
+                    <canvas [id]="'chart-' + food.id"></canvas>
+                  </div>
+                  <div class="flex-fill mx-4">
+                    <div>
+                      Protein: <span [innerHTML]="food.protein ? food.protein + 'g' : '<strong> - </strong>'"></span> 
+                    </div>
+                    <div>
+                      Carbs: <span [innerHTML]="food.carbs ? food.carbs + 'g' : '<strong> - </strong>'"></span> 
+                    </div>
+                    <div>
+                      Fat: <span [innerHTML]="food.fat ? food.fat + 'g' : '<strong> - </strong>'"></span> 
+                    </div>
+                    <div>
+                      Fiber: <span [innerHTML]="food.fiber ? food.fiber + 'g' : '<strong> - </strong>'"></span>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="btn btn-sm btn-outline-info me-2">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -291,3 +307,4 @@
     </div>
   </div>
 </div>
+

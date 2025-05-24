@@ -14,15 +14,19 @@ export class FoodBankService {
     this.loadFoods();
   }
 
-  private loadFoods(): void {
+  public loadFoods(): void {
     const storedFoods = localStorage.getItem(this.STORAGE_KEY);
     if (storedFoods) {
       this.foodsSubject.next(JSON.parse(storedFoods));
     }
   }
 
-  private saveFoods(foods: Food[]): void {
+  public saveFoods(foods: Food[]): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(foods));
     this.foodsSubject.next(foods);
+  }
+  
+  getFoods(): Food[] {
+    return this.foodsSubject.getValue();
   }
 } 
