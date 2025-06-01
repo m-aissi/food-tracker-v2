@@ -2,30 +2,44 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import { Food } from './models/food.interface';
 import { FoodBankService } from './services/food-bank.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import Chart from 'chart.js/auto';
+import { filter } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { Input } from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule]
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  constructor(private foodBankService: FoodBankService) {}
+  constructor(
+    private foodBankService: FoodBankService,
+    private http: HttpClient
+  ) {}
+
   foods: any[] = [];
   charts: { [key: string]: Chart } = {};
-
+  nameExists = false;
+  foodName: any;
+  foodCalories: any;
+  caloriesEmpty = true;
   ngOnInit(): void {
-    const foodsItems = [
-      { id: '1', name: 'Burger', calories: 500, carbs: 40, fat: 30 },
-      { id: '2', name: 'MONSTRE', calories: 17, protein: 25, carbs: 40, fat: 30 },
-      { id: '3', name: 'Apple', calories: 54, protein: 25, carbs: 40, fat: 30, fiber: 10 }
-    ];
-    console.log(foodsItems);
-    this.foodBankService.saveFoods(foodsItems);
-    this.foods = this.foodBankService.getFoods();
+    this.initFoods();
+  }
+
+  initFoods() {
+    this.http.get<Food[]>('http://192.168.1.90:3000/api/foods')
+      .subscribe({
+        next: (foods) => {
+          this.foods = foods;
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -37,9 +51,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  addFood(food: { id: string; name: string; calories: number; protein?: number; carbs?: number; fat?: number }): void {
-    //this.foods.push(food);
-  }
 
   createDoughnut(food: any, canvasId: string) {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -96,5 +107,67 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       }
     });
+  }
+
+  addFood() {
+    console.log('addFood');
+    const foodName = document.getElementById('foodName') as HTMLInputElement;
+    const calories = document.getElementById('calories') as HTMLInputElement;
+    const protein = document.getElementById('protein') as HTMLInputElement;
+    const carbs = document.getElementById('carbs') as HTMLInputElement;
+    const fat = document.getElementById('fat') as HTMLInputElement;
+    const fiber = document.getElementById('fiber') as HTMLInputElement;
+    console.log(foodName, calories, protein, carbs, fat, fiber);
+    const newFood: Food = { 
+      name: foodName.value,
+      calories: parseInt(calories.value),
+      protein: parseInt(protein.value),
+      carbs: parseInt(carbs.value),
+      fat: parseInt(fat.value),
+      fiber: parseInt(fiber.value)
+    };
+    if(this.foods.find(food => food.name === newFood.name)) {
+      console.log('Food already exists');
+      return;
+    }
+    this.foods.push(newFood);
+    this.createDoughnut(newFood, 'chart-' + newFood.id);
+    this.http.post('http://192.168.1.90:3000/api/foods', newFood)
+      .subscribe({
+        next: () => {
+          console.log('Food added successfully');
+        }
+      });
+  }
+
+  deleteFood(name: string) {
+    console.log(name);
+    this.http.delete(`http://192.168.1.90:3000/api/foods/${name}`)
+      .subscribe({
+        next: () => {
+          console.log('Food deleted ssssss');
+        }
+      });
+
+    this.foods = this.foods.filter(food => food.name !== name);
+  }
+
+  checkNameExists() {
+    console.log(this.foodName);
+    if (this.foods.some(food => food.name === this.foodName)) {
+      console.log('Food already exists');
+      this.nameExists = true;
+    } else {
+      this.nameExists = false;
+    } 
+  }
+
+  checkCalories() {
+    console.log(this.foodCalories);
+    if (this.foodCalories === 0) {
+      this.caloriesEmpty = true;
+    } else {
+      this.caloriesEmpty = false;
+    }
   }
 }

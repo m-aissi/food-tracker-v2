@@ -224,31 +224,46 @@
               <form>
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label class="form-label">Food Name</label>
-                    <input type="text" class="form-control bg-dark text-light border-secondary" required>
+                    <label for="foodName">Food Name*</label>
+                    <input id="foodName" name="foodName" [(ngModel)]="foodName" (ngModelChange)="checkNameExists()"
+                    placeholder="Food Name..." type="text" class="form-control bg-dark text-light border-secondary" required>
+                    <span *ngIf="nameExists" class="text-danger fw-bold">
+                      This food already exists
+                    </span>
+                    <!-- si c'est vide ou undefined -->
+                    <span *ngIf="foodName.length === 0 || foodName === undefined" class="text-danger fw-bold">
+                      Food name cannot be empty
+                    </span>
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label class="form-label">Calories</label>
-                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                    <label for="calories">Calories/100g*</label>
+                    <input id="calories" name="calories" [(ngModel)]="foodCalories" (ngModelChange)="checkCalories()" placeholder="Calories..." type="number" class="form-control bg-dark text-light border-secondary" required>
+                    <span *ngIf="caloriesEmpty" class="text-danger fw-bold">
+                      Calories cannot be empty
+                    </span>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-4 mb-3">
-                    <label class="form-label">Protein (g)</label>
-                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                    <label for="protein">Protein (g)</label>
+                    <input id="protein" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
                   </div>
                   <div class="col-md-4 mb-3">
-                    <label class="form-label">Carbs (g)</label>
-                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                    <label for="carbs">Carbs (g)</label>
+                    <input id="carbs" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
                   </div>
                   <div class="col-md-4 mb-3">
-                    <label class="form-label">Fat (g)</label>
-                    <input type="number" class="form-control bg-dark text-light border-secondary" required>
+                    <label for="fat">Fat (g)</label>
+                    <input id="fat" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="fiber">Fiber (g)</label>
+                    <input id="fiber" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
                   </div>
                 </div>
                 <div class="text-end -dark">
                   <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#addFoodCollapse">Cancel</button>
-                  <button type="submit" class="btn btn-primary">Save Food</button>
+                  <button type="button" class="btn btn-primary" (click)="addFood()" [disabled]="nameExists || caloriesEmpty">Save Food</button>
                 </div>
               </form>
             </div>
@@ -294,7 +309,7 @@
                     <button class="btn btn-sm btn-outline-info me-2">
                       <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger">
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteFood(food.name)">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
