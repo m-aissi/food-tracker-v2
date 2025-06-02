@@ -21,7 +21,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private foodBankService: FoodBankService,
     private http: HttpClient
-  ) {}
+  ) {
+
+  }
 
   foods: any[] = [];
   charts: { [key: string]: Chart } = {};
@@ -29,9 +31,21 @@ export class AppComponent implements OnInit, AfterViewInit {
   foodName: any;
   foodCalories: any;
   caloriesEmpty = true;
+  foodIsEmpty = true;
+  nameError : String = '';
+  calorieError : String = '';
+  foodProtein : any;
+  foodCarbs : any;
+  foodFat : any;
+  foodFiber : any;
+
   ngOnInit(): void {
-    this.initFoods();
-  }
+    this.http.get<Food[]>('http://192.168.1.90:3000/api/foods')
+      .subscribe({
+        next: (foods) => {
+          this.foods = foods;
+        }
+      });  }
 
   initFoods() {
     this.http.get<Food[]>('http://192.168.1.90:3000/api/foods')
@@ -110,14 +124,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   addFood() {
-    console.log('addFood');
     const foodName = document.getElementById('foodName') as HTMLInputElement;
     const calories = document.getElementById('calories') as HTMLInputElement;
     const protein = document.getElementById('protein') as HTMLInputElement;
     const carbs = document.getElementById('carbs') as HTMLInputElement;
     const fat = document.getElementById('fat') as HTMLInputElement;
     const fiber = document.getElementById('fiber') as HTMLInputElement;
-    console.log(foodName, calories, protein, carbs, fat, fiber);
+
     const newFood: Food = { 
       name: foodName.value,
       calories: parseInt(calories.value),
@@ -138,6 +151,16 @@ export class AppComponent implements OnInit, AfterViewInit {
           console.log('Food added successfully');
         }
       });
+
+    //on reset les inputs field
+    this.foodCalories = '';
+    this.foodName = '';
+    this.foodProtein = '';
+    this.foodCarbs = '';
+    this.foodFat = '';
+    this.foodFiber = '';
+
+    this.areInputsValid();
   }
 
   deleteFood(name: string) {
@@ -152,22 +175,51 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.foods = this.foods.filter(food => food.name !== name);
   }
 
-  checkNameExists() {
-    console.log(this.foodName);
-    if (this.foods.some(food => food.name === this.foodName)) {
-      console.log('Food already exists');
-      this.nameExists = true;
-    } else {
-      this.nameExists = false;
-    } 
+  isNameValid(){
+    this.checkNameEmpty();
+    this.checkNameExists();
   }
 
-  checkCalories() {
-    console.log(this.foodCalories);
-    if (this.foodCalories === 0) {
-      this.caloriesEmpty = true;
-    } else {
-      this.caloriesEmpty = false;
+  isCaloriesValid(){
+    this.checkCaloriesEmpty()
+  }
+
+  checkNameExists() {
+    if (this.foods.find(food => food['name'].toLowerCase() === this.foodName.toLowerCase())){
+      this.nameError = "This name is already taken";
     }
+    else {
+    }
+  }
+
+  checkNameEmpty(){
+    console.log("pain")
+    if(this.foodName){
+      this.nameError = ""
+    }
+    else{
+      this.nameError = "Name cannot be empty."
+    }
+  }
+
+  checkCaloriesEmpty() {
+    console.log(this.foodCalories);
+    console.log("LIBEREZ BAKHAW PAR PITIE")
+    if (!this.foodCalories) {
+      this.calorieError = 'Calories cannot be empty';
+      console.log("TRIPLE MONSTRE")
+    } else {
+      this.calorieError = '';
+      console.log(":((((((((((((((")
+    }
+  }
+
+  areInputsValid(){
+    this.checkNameEmpty();
+    this.isCaloriesValid();
+  }
+
+  isFormValid(){
+    return this.calorieError.length === 0 && this.nameError.length === 0;
   }
 }

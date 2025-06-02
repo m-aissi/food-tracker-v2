@@ -213,7 +213,7 @@
             </span>
             <input type="text" class="form-control bg-dark text-light border-secondary" placeholder="Search foods...">
           </div>
-          <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#addFoodCollapse">
+          <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#addFoodCollapse" (click)="areInputsValid()">
             <i class="bi bi-plus-lg"></i> Add Food
           </button>
         </div>
@@ -225,45 +225,43 @@
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="foodName">Food Name*</label>
-                    <input id="foodName" name="foodName" [(ngModel)]="foodName" (ngModelChange)="checkNameExists()"
+                    <input id="foodName" name="foodName" [(ngModel)]="foodName" (ngModelChange)="isNameValid()"
                     placeholder="Food Name..." type="text" class="form-control bg-dark text-light border-secondary" required>
-                    <span *ngIf="nameExists" class="text-danger fw-bold">
-                      This food already exists
-                    </span>
+ 
                     <!-- si c'est vide ou undefined -->
-                    <span *ngIf="foodName.length === 0 || foodName === undefined" class="text-danger fw-bold">
-                      Food name cannot be empty
+                    <span class="form-control-sm text-danger fw-bold">
+                      {{ nameError }}
                     </span>
                   </div>
                   <div class="col-md-6 mb-3">
                     <label for="calories">Calories/100g*</label>
-                    <input id="calories" name="calories" [(ngModel)]="foodCalories" (ngModelChange)="checkCalories()" placeholder="Calories..." type="number" class="form-control bg-dark text-light border-secondary" required>
-                    <span *ngIf="caloriesEmpty" class="text-danger fw-bold">
-                      Calories cannot be empty
+                    <input id="calories" name="calories" [(ngModel)]="foodCalories" (ngModelChange)="isCaloriesValid()" placeholder="Calories..." type="number" class="form-control bg-dark text-light border-secondary" required>
+                    <span class="form-control-sm text-danger fw-bold">
+                      {{ calorieError }}
                     </span>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-4 mb-3">
+                  <div class="col-md-6 mb-3">
                     <label for="protein">Protein (g)</label>
-                    <input id="protein" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
+                    <input id="protein" name="protein" [(ngModel)]="foodProtein" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
                   </div>
-                  <div class="col-md-4 mb-3">
+                  <div class="col-md-6 mb-3">
                     <label for="carbs">Carbs (g)</label>
-                    <input id="carbs" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
+                    <input id="carbs" name="carbs" [(ngModel)]="foodCarbs" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
                   </div>
-                  <div class="col-md-4 mb-3">
+                  <div class="col-md-6 mb-3">
                     <label for="fat">Fat (g)</label>
-                    <input id="fat" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
+                    <input id="fat" type="number" name="fat" [(ngModel)]="foodFat" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
                   </div>
-                  <div class="col-md-4 mb-3">
+                  <div class="col-md-6 mb-3">
                     <label for="fiber">Fiber (g)</label>
-                    <input id="fiber" type="number" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
+                    <input id="fiber" type="number" name="fiber" [(ngModel)]="foodFiber" placeholder="Optional..." class="form-control bg-dark text-light border-secondary">
                   </div>
                 </div>
-                <div class="text-end -dark">
+                <div class="text-end">
                   <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#addFoodCollapse">Cancel</button>
-                  <button type="button" class="btn btn-primary" (click)="addFood()" [disabled]="nameExists || caloriesEmpty">Save Food</button>
+                  <button type="button" class="btn btn-primary" (click)="addFood()" [disabled]="!isFormValid()">Save Food</button>
                 </div>
               </form>
             </div>
@@ -276,20 +274,20 @@
             <div class="d-flex justify-content-between align-items-center p-2 rounded bg-light-subtle" 
                  role="button" 
                  data-bs-toggle="collapse" 
-                 [attr.data-bs-target]="'#foodCollapse' + food.id" 
+                 [attr.data-bs-target]="'#foodCollapse' + food._id" 
                  aria-expanded="false" 
-                 [attr.aria-controls]="'foodCollapse' + food.id">
+                 [attr.aria-controls]="'foodCollapse' + food._id">
               <div class="d-flex align-items-center">
                 <span class="fw-bold">{{food.name}}</span>
                 <span class="badge text-bg-primary mx-2">{{food.calories}} kcal</span>
               </div>
               <i class="bi bi-chevron-down"></i>
             </div>
-            <div class="collapse" [id]="'foodCollapse' + food.id">
+            <div class="collapse" [id]="'foodCollapse' + food._id">
               <div class="card card-body bg-dark text-light">
                 <div class="d-flex justify-content-start align-items-center">
                   <div class="ms-2" style="width: 100px; height: 100px; position: relative;">
-                    <canvas [id]="'chart-' + food.id"></canvas>
+                    <canvas [id]="'chart-' + food._id"></canvas>
                   </div>
                   <div class="flex-fill mx-4">
                     <div>
