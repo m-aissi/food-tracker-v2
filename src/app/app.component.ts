@@ -40,18 +40,15 @@ export class AppComponent implements OnInit, AfterViewInit {
   foodFiber : any;
 
   ngOnInit(): void {
-    this.http.get<Food[]>('http://192.168.1.90:3000/api/foods')
-      .subscribe({
-        next: (foods) => {
-          this.foods = foods;
-        }
-      });  }
+    this.initFoods();
+  }
 
   initFoods() {
     this.http.get<Food[]>('http://192.168.1.90:3000/api/foods')
       .subscribe({
         next: (foods) => {
           this.foods = foods;
+          console.log(this.foods)
         }
       });
   }
@@ -124,20 +121,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   addFood() {
-    const foodName = document.getElementById('foodName') as HTMLInputElement;
-    const calories = document.getElementById('calories') as HTMLInputElement;
-    const protein = document.getElementById('protein') as HTMLInputElement;
-    const carbs = document.getElementById('carbs') as HTMLInputElement;
-    const fat = document.getElementById('fat') as HTMLInputElement;
-    const fiber = document.getElementById('fiber') as HTMLInputElement;
 
     const newFood: Food = { 
-      name: foodName.value,
-      calories: parseInt(calories.value),
-      protein: parseInt(protein.value),
-      carbs: parseInt(carbs.value),
-      fat: parseInt(fat.value),
-      fiber: parseInt(fiber.value)
+      name: this.foodName,
+      calories: parseFloat(this.foodCalories),
+      protein: parseFloat(this.foodProtein),
+      carbs: parseFloat(this.foodCarbs),
+      fat: parseFloat(this.foodFat),
+      fiber: parseFloat(this.foodFiber)
     };
     if(this.foods.find(food => food.name === newFood.name)) {
       console.log('Food already exists');
